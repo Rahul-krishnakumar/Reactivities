@@ -20,7 +20,7 @@ namespace API
 
             // using keyword ensures that the variable is disposed once the method has completed.
             using var scope = host.Services.CreateScope();
-            var services =scope.ServiceProvider;
+            var services = scope.ServiceProvider;
 
             // Checks if there are any pending migrations, and performs them.
             try
