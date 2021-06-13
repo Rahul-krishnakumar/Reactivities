@@ -1,26 +1,47 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Container } from "semantic-ui-react";
 import NavBar from "./NavBar";
 import ActivitiesDashboard from "../../features/activities/dashboard/ActivitiesDashboard";
-import Spinner from "./Spinner";
-import { useStore } from "../stores/store";
+
+import { Switch, Route, useLocation } from "react-router-dom";
+
 import { observer } from "mobx-react-lite";
+import HomePage from "../../features/home/HomePage";
+import ActivityForm from "../../features/activities/form/ActivityForm";
+import ActivityDetails from "../../features/activities/details/ActivityDetails";
 
 function App() {
-  const { activityStore } = useStore();
-
-  useEffect(() => {
-    activityStore.loadActivities();
-  }, [activityStore]);
-
-  if (activityStore.loadingInitial) return <Spinner content="Loading..." />;
+  const location = useLocation();
   return (
     <>
-      <NavBar />
-      <Container style={{ marginTop: "7em" }}>
-        <ActivitiesDashboard />
-      </Container>
+      <Route path="/" exact>
+        <HomePage />
+      </Route>
+      <Route
+        path={"/(.+)"}
+        render={() => (
+          <>
+            <NavBar />
+            <Container style={{ marginTop: "7em" }}>
+              <Switch>
+                <Route path="/activities/:id">
+                  <ActivityDetails />
+                </Route>
+                <Route path="/activities">
+                  <ActivitiesDashboard />
+                </Route>
+                <Route
+                  key={location.key}
+                  path={["/createActivity", "/manage/:id"]}
+                >
+                  <ActivityForm />
+                </Route>
+              </Switch>
+            </Container>
+          </>
+        )}
+      />
     </>
   );
 }

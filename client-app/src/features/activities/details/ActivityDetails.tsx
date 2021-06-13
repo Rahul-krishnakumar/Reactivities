@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../../app/stores/store";
+
+import { Link, useParams } from "react-router-dom";
+
 import { Button, Card, Image } from "semantic-ui-react";
 import Spinner from "../../../app/layout/Spinner";
-import { useStore } from "../../../app/stores/store";
 
 const ActivityDetails = () => {
   const {
-    activityStore: {
-      selectedActivity: activity,
-      openForm,
-      cancelSelectedActivity,
-    },
+    activityStore: { selectedActivity: activity, loadActivity, loadingInitial },
   } = useStore();
 
-  if (!activity) return <Spinner content="" />;
+  const { id } = useParams<{ id: string }>();
+
+  useEffect(() => {
+    if (id) loadActivity(id);
+  }, [id, loadActivity]);
+
+  if (loadingInitial || !activity) return <Spinner content="" />;
 
   return (
     <Card fluid>
@@ -27,13 +34,15 @@ const ActivityDetails = () => {
       <Card.Content extra>
         <Button.Group widths="2">
           <Button
-            onClick={() => openForm(activity.id)}
+            as={Link}
+            to={`/manage/${activity.id}`}
             basic
             color="blue"
             content="Edit"
           />
           <Button
-            onClick={cancelSelectedActivity}
+            as={Link}
+            to={"/activities"}
             basic
             color="grey"
             content="Cancel"
@@ -44,4 +53,4 @@ const ActivityDetails = () => {
   );
 };
 
-export default ActivityDetails;
+export default observer(ActivityDetails);

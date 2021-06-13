@@ -1,14 +1,13 @@
 import React from "react";
+
+import { Link, NavLink } from "react-router-dom";
 import { Button, Container, Menu } from "semantic-ui-react";
-import { useStore } from "../stores/store";
 
 const NavBar = () => {
-  const { activityStore } = useStore();
-
   return (
     <Menu inverted fixed="top">
       <Container>
-        <Menu.Item header>
+        <Menu.Item as={Link} to="/" header>
           <img
             src="/assets/logo.png"
             alt="Logo"
@@ -16,13 +15,9 @@ const NavBar = () => {
           />
           Reactivities
         </Menu.Item>
-        <Menu.Item name="Activites" />
-        <Menu.Item>
-          <Button
-            onClick={() => activityStore.openForm()}
-            positive
-            content="Create Activity"
-          />
+        <Menu.Item as={NavLink} to="/activities" name="Activities" />
+        <Menu.Item as={Link} to="/createActivity">
+          <Button positive content="Create Activity" />
         </Menu.Item>
       </Container>
     </Menu>
